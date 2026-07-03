@@ -1,0 +1,29 @@
+# Multilingual Indian Language Chatbot - Render Deployment
+# Lightweight version: no fasttext, no RAG (these need C++ build tools)
+# The app has built-in fallbacks for all removed packages.
+
+# Core
+fastapi==0.115.0
+uvicorn==0.30.0
+pydantic>=2.0
+
+# LLM Engine (Ollama SDK needed even though Ollama won't run on Render —
+# the import is guarded and Groq fallback kicks in automatically)
+ollama>=0.4.0
+
+# Cloud LLM (primary backend on Render)
+groq>=0.11.0
+python-dotenv>=1.0.0
+
+# Translation
+deep-translator>=1.11.0
+
+# Voice (TTS only — browser handles speech recognition)
+gTTS>=2.5.0
+
+# Template & Multipart
+jinja2>=3.1.0
+python-multipart>=0.0.6
+
+# HTTP Client
+requests>=2.28.0
