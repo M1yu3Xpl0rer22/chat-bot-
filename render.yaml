@@ -2,7 +2,8 @@ services:
   - type: web
     name: multilingual-chatbot-api
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    pythonVersion: "3.11.12"
+    buildCommand: pip install -r requirements-render.txt
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: GROQ_API_KEY
@@ -11,3 +12,4 @@ services:
         value: llama-3.1-8b-instant
       - key: PYTHONIOENCODING
         value: utf-8
+
