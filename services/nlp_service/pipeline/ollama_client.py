@@ -70,6 +70,11 @@ class OllamaClient:
 
     def _verify_model(self):
         """Check if the Ollama model is available. Never raises — sets self.ollama_available instead."""
+        if os.getenv("RENDER"):
+            self.ollama_available = False
+            print("ℹ️ Running on Render — skipping local Ollama check.")
+            return
+
         try:
             ollama.show(self.model)
             self.ollama_available = True

@@ -28,6 +28,10 @@ class RAGService:
 
         # Ensure upload directory exists
         os.makedirs(self.upload_dir, exist_ok=True)
+
+        if os.getenv("RENDER"):
+            print("ℹ️ Running on Render — skipping RAG Service (requires local Ollama).")
+            return
         
         try:
             self.embeddings = OllamaEmbeddings(model=ollama_model)

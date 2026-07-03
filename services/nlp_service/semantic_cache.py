@@ -24,6 +24,10 @@ class SemanticCache:
         if not CACHE_AVAILABLE:
             print("⚠️ Semantic Cache disabled: missing langchain dependencies.")
             return
+
+        if os.getenv("RENDER"):
+            print("ℹ️ Running on Render — skipping Semantic Cache (requires local Ollama).")
+            return
             
         try:
             self.embeddings = OllamaEmbeddings(model=ollama_model)
