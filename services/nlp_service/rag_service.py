@@ -30,7 +30,7 @@ class RAGService:
         os.makedirs(self.upload_dir, exist_ok=True)
 
         if os.getenv("RENDER"):
-            print("ℹ️ Running on Render — skipping RAG Service (requires local Ollama).")
+            print("Info: Running on Render — skipping RAG Service (requires local Ollama).")
             return
         
         try:
@@ -39,10 +39,10 @@ class RAGService:
             self.embeddings.embed_query("test")
             # Load Cross-Encoder model for re-ranking
             self.cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-            print("✅ RAG Service initialized with Hybrid Search & Re-ranking")
+            print("RAG Service initialized with Hybrid Search & Re-ranking")
         except Exception as e:
             self.embeddings = None
-            print(f"⚠️ RAG Service disabled (Ollama not available for embeddings): {e}")
+            print(f"Warning: RAG Service disabled (Ollama not available for embeddings): {e}")
 
     def process_document(self, file_path: str, session_id: str) -> bool:
         """Extract text from PDF, chunk it, and store in FAISS vector store."""

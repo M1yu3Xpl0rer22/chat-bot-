@@ -45,11 +45,11 @@ class KnowledgeBase:
             for entry in data.get("intents", []):
                 intent_name = entry["intent"]
                 self.intents[intent_name] = entry
-            print(f"✅ Knowledge Base loaded: {len(self.intents)} intents")
+            print(f"Knowledge Base loaded: {len(self.intents)} intents")
         except FileNotFoundError:
-            print(f"⚠️ KB file not found at {self.kb_path}")
+            print(f"Warning: KB file not found at {self.kb_path}")
         except Exception as e:
-            print(f"⚠️ KB load error: {e}")
+            print(f"Warning: KB load error: {e}")
 
     def get_response(self, intent: str, language: str) -> str | None:
         """Get a curated KB response for a given intent and language."""
@@ -107,7 +107,7 @@ class NLPPipeline:
     SUPPORTED_LANGS = {"hi", "bn", "mr", "ta", "te", "kn", "en"}
 
     def __init__(self, model_name: str = "llama3.2:3b"):
-        print("🚀 Initializing NLP Pipeline...")
+        print("Initializing NLP Pipeline...")
 
         # Initialize components
         self.ollama = OllamaClient(model_name)
@@ -125,14 +125,14 @@ class NLPPipeline:
         if _fasttext_available:
             try:
                 self.lang_detector = LanguageDetector()
-                print("✅ FastText language detector loaded")
+                print("FastText language detector loaded")
             except Exception as e:
-                print(f"⚠️ FastText detector failed: {e}. Using Ollama for detection.")
+                print(f"Warning: FastText detector failed: {e}. Using Ollama for detection.")
 
         # Session store (in-memory for now, Redis later)
         self.sessions = {}
 
-        print("✅ NLP Pipeline ready!")
+        print("NLP Pipeline ready!")
 
     def detect_language(self, text: str) -> tuple[str, float]:
         """Detect the language of input text."""

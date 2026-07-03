@@ -28,7 +28,8 @@ RULES:
 2. Be polite, helpful, and concise.
 3. If you don't know something, say so honestly.
 4. Provide detailed, helpful, and informative responses.
-5. For translation requests, translate accurately."""
+5. For translation requests, translate accurately.
+6. Do NOT use emojis in your responses under any circumstances. Keep the response strictly professional, clean, and textual."""
 
 # Combined prompt: classify intent AND generate response in ONE call
 COMBINED_PROMPT = """User message: "{message}"
@@ -58,38 +59,38 @@ class OllamaClient:
         if self.groq_api_key:
             if GROQ_SDK_AVAILABLE:
                 self.groq_client = Groq(api_key=self.groq_api_key)
-                print(f"✅ Groq fallback ready (model: {self.groq_model})")
+                print(f"Groq fallback ready (model: {self.groq_model})")
             else:
-                print("⚠️ GROQ_API_KEY is set but the 'groq' package isn't installed. Run: pip install groq")
+                print("Warning: GROQ_API_KEY is set but the 'groq' package isn't installed. Run: pip install groq")
         else:
-            print("ℹ️ No GROQ_API_KEY set — cloud fallback disabled (Ollama-only mode).")
+            print("Info: No GROQ_API_KEY set — cloud fallback disabled (Ollama-only mode).")
 
         # Warn if NEITHER backend is available
         if not self.ollama_available and not self.groq_client:
-            print("❌ WARNING: No LLM backend available! Neither Ollama nor Groq is configured.")
+            print("WARNING: No LLM backend available! Neither Ollama nor Groq is configured.")
 
     def _verify_model(self):
         """Check if the Ollama model is available. Never raises — sets self.ollama_available instead."""
         if os.getenv("RENDER"):
             self.ollama_available = False
-            print("ℹ️ Running on Render — skipping local Ollama check.")
+            print("Info: Running on Render — skipping local Ollama check.")
             return
 
         try:
             ollama.show(self.model)
             self.ollama_available = True
-            print(f"✅ Ollama model loaded: {self.model}")
+            print(f"Ollama model loaded: {self.model}")
         except Exception as e:
-            print(f"⚠️ Model '{self.model}' not available: {e}")
+            print(f"Warning: Model '{self.model}' not available: {e}")
             # Fallback to default tag
             try:
                 self.model = "llama3.2"
                 ollama.show(self.model)
                 self.ollama_available = True
-                print(f"✅ Fallback model: {self.model}")
+                print(f"Fallback model: {self.model}")
             except Exception:
                 self.ollama_available = False
-                print("❌ No local Ollama model available (will rely on Groq fallback if configured).")
+                print("No local Ollama model available (will rely on Groq fallback if configured).")
 
     # ------------------------------------------------------------------
     # Unified chat helpers — every method below goes through these two,

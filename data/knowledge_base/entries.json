@@ -93,13 +93,13 @@
       "intent": "ask_help",
       "description": "User asks what the bot can do",
       "responses": {
-        "en": ["I can help you with:\n🌐 Conversations in 7 languages (Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, English)\n🔄 Translation between Indian languages\n📚 General knowledge questions\n🧮 Simple math calculations\n📖 Word meanings and definitions\n😂 Jokes and fun facts\n💬 Casual conversation\n\nJust type in any Indian language and I'll respond!"],
-        "hi": ["मैं इन चीज़ों में मदद कर सकता हूँ:\n🌐 7 भाषाओं में बातचीत\n🔄 भारतीय भाषाओं में अनुवाद\n📚 सामान्य ज्ञान\n🧮 गणित के सवाल\n📖 शब्दों के अर्थ\n😂 चुटकुले\n💬 सामान्य बातचीत\n\nकिसी भी भारतीय भाषा में टाइप करें!"],
-        "bn": ["আমি এসব বিষয়ে সাহায্য করতে পারি:\n🌐 ৭টি ভাষায় কথোপকথন\n🔄 ভারতীয় ভাষায় অনুবাদ\n📚 সাধারণ জ্ঞান\n🧮 গণিত\n😂 কৌতুক"],
-        "mr": ["मी या गोष्टींमध्ये मदत करू शकतो:\n🌐 ७ भाषांमध्ये संवाद\n🔄 भारतीय भाषांमध्ये अनुवाद\n📚 सामान्य ज्ञान\n🧮 गणित\n😂 विनोद"],
-        "ta": ["நான் இவற்றில் உதவ முடியும்:\n🌐 7 மொழிகளில் உரையாடல்\n🔄 மொழிபெயர்ப்பு\n📚 பொது அறிவு\n🧮 கணிதம்\n😂 நகைச்சுவை"],
-        "te": ["నేను ఈ విషయాలలో సహాయం చేయగలను:\n🌐 7 భాషలలో సంభాషణ\n🔄 అనువాదం\n📚 సాధారణ జ్ఞానం\n🧮 గణితం\n😂 జోకులు"],
-        "kn": ["ನಾನು ಈ ವಿಷಯಗಳಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಹುದು:\n🌐 7 ಭಾಷೆಗಳಲ್ಲಿ ಸಂಭಾಷಣೆ\n🔄 ಅನುವಾದ\n📚 ಸಾಮಾನ್ಯ ಜ್ಞಾನ\n🧮 ಗಣಿತ\n😂 ಹಾಸ್ಯ"]
+        "en": ["I can help you with:\n- Conversations in 7 languages (Hindi, Bengali, Marathi, Tamil, Telugu, Kannada, English)\n- Translation between Indian languages\n- General knowledge questions\n- Simple math calculations\n- Word meanings and definitions\n- Jokes and fun facts\n- Casual conversation\n\nJust type in any Indian language and I'll respond!"],
+        "hi": ["मैं इन चीज़ों में मदद कर सकता हूँ:\n- 7 भाषाओं में बातचीत\n- भारतीय भाषाओं में अनुवाद\n- सामान्य ज्ञान\n- गणित के सवाल\n- शब्दों के अर्थ\n- चुटकुले\n- सामान्य बातचीत\n\nकिसी भी भारतीय भाषा में टाइप करें!"],
+        "bn": ["আমি এসব বিষয়ে সাহায্য করতে পারি:\n- ৭টি ভাষায় কথোপকথন\n- ভারতীয় ভাষায় অনুবাদ\n- সাধারণ জ্ঞান\n- গণিত\n- কৌতুক"],
+        "mr": ["मी या गोष्टींमध्ये मदत करू शकतो:\n- ७ भाषांमध्ये संवाद\n- भारतीय भाषांमध्ये अनुवाद\n- सामान्य ज्ञान\n- गणित\n- विनोद"],
+        "ta": ["நான் இவற்றில் உதவ முடியும்:\n- 7 மொழிகளில் உரையாடல்\n- மொழிபெயர்ப்பு\n- பொது அறிவு\n- கணிதம்\n- நகைச்சுவை"],
+        "te": ["నేను ఈ విషయాలలో సహాయం చేయగలను:\n- 7 భాషలలో సంభాషణ\n- అనువాదం\n- సాధారణ జ్ఞానం\n- गणित\n- జోకులు"],
+        "kn": ["ನಾನು ಈ ವಿಷಯಗಳಲ್ಲಿ ಸಹಾಯ ಮಾಡಬಹುದು:\n- 7 ಭಾಷೆಗಳಲ್ಲಿ ಸಂಭಾಷಣೆ\n- ಅನುವಾದ\n- ಸಾಮಾನ್ಯ ಜ್ಞಾನ\n- ಗಣಿತ\n- ಹಾಸ್ಯ"]
       },
       "examples": {
         "en": ["What can you do?", "Help me", "What are your features?", "How can you help?"],
@@ -218,8 +218,8 @@
       "dynamic": true,
       "handler": "ollama_generate",
       "responses": {
-        "en": ["Here's one for you! 😄"],
-        "hi": ["सुनिए एक मज़ेदार चुटकुला! 😄"]
+        "en": ["Here's a joke for you:"],
+        "hi": ["सुनिए एक मज़ेदार चुटकुला:"]
       },
       "examples": {
         "en": ["Tell me a joke", "Make me laugh", "Something funny"],
@@ -336,13 +336,13 @@
       "intent": "feedback",
       "description": "User gives feedback or appreciation",
       "responses": {
-        "en": ["Thank you for your feedback! It helps me improve. 😊"],
-        "hi": ["आपकी प्रतिक्रिया के लिए धन्यवाद! इससे मुझे बेहतर होने में मदद मिलती है। 😊"],
-        "bn": ["আপনার মতামতের জন্য ধন্যবাদ! এটি আমাকে আরও ভালো হতে সাহায্য করে। 😊"],
-        "mr": ["तुमच्या अभिप्रायाबद्दल धन्यवाद! यामुळे मला सुधारण्यास मदत होते. 😊"],
-        "ta": ["உங்கள் கருத்துக்கு நன்றி! இது என்னை மேம்படுத்த உதவுகிறது. 😊"],
-        "te": ["మీ అభిప్రాయానికి ధన్యవాదాలు! ఇది నన్ను మెరుగుపరచడంలో సహాయపడుతుంది. 😊"],
-        "kn": ["ನಿಮ್ಮ ಅಭಿಪ್ರಾಯಕ್ಕೆ ಧನ್ಯವಾದ! ಇದು ನನ್ನನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ. 😊"]
+        "en": ["Thank you for your feedback! It helps me improve."],
+        "hi": ["आपकी प्रतिक्रिया के लिए धन्यवाद! इससे मुझे बेहतर होने में मदद मिलती है।"],
+        "bn": ["আপনার মতামতের জন্য ধন্যবাদ! এটি আমাকে আরও ভালো হতে সাহায্য করে।"],
+        "mr": ["तुमच्या अभिप्रायाबद्दल धन्यवाद! यामुळे मला सुधारण्यास मदत होते।"],
+        "ta": ["உங்கள் கருத்துக்கு நன்றி! இது என்னை மேம்படுத்த உதவுகிறது."],
+        "te": ["మీ అభిప్రాయానికి ధన్యవాదాలు! ఇది నన్ను మెరుగుపరచడంలో సహాయపడుతుంది."],
+        "kn": ["ನಿಮ್ಮ ಅಭಿಪ್ರಾಯಕ್ಕೆ ಧನ್ಯವಾದ! ಇದು ನನ್ನನ್ನು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ।"]
       },
       "examples": {
         "en": ["Great job!", "You're doing well", "Good work", "Nice chatbot"],

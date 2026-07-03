@@ -58,13 +58,13 @@ init_db()
 async def lifespan(app: FastAPI):
     """Initialize NLP pipeline on startup."""
     global pipeline, semantic_cache
-    print("🚀 Starting Multilingual Chatbot Server...")
+    print("Starting Multilingual Chatbot Server...")
     from services.nlp_service.pipeline.main_pipeline import NLPPipeline
     pipeline = NLPPipeline(model_name="llama3.2:3b")
     semantic_cache = SemanticCache(ollama_model="llama3.2:3b", similarity_threshold=0.5)
-    print("✅ Server ready!")
+    print("Server ready!")
     yield
-    print("👋 Shutting down server...")
+    print("Shutting down server...")
 
 
 app = FastAPI(

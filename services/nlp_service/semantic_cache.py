@@ -22,21 +22,20 @@ class SemanticCache:
         self.similarity_threshold = similarity_threshold 
         
         if not CACHE_AVAILABLE:
-            print("⚠️ Semantic Cache disabled: missing langchain dependencies.")
+            print("Warning: Semantic Cache disabled: missing langchain dependencies.")
             return
 
         if os.getenv("RENDER"):
-            print("ℹ️ Running on Render — skipping Semantic Cache (requires local Ollama).")
+            print("Info: Running on Render — skipping Semantic Cache (requires local Ollama).")
             return
             
         try:
             self.embeddings = OllamaEmbeddings(model=ollama_model)
-            # Test the connection by attempting a small embedding
             self.embeddings.embed_query("test")
-            print("✅ Semantic Cache initialized")
+            print("Semantic Cache initialized")
         except Exception as e:
             self.embeddings = None
-            print(f"⚠️ Semantic Cache disabled (Ollama not available for embeddings): {e}")
+            print(f"Warning: Semantic Cache disabled (Ollama not available for embeddings): {e}")
             
     def get(self, query: str) -> Optional[dict]:
         """Search for a semantically similar query in cache."""
@@ -48,7 +47,7 @@ class SemanticCache:
             if results:
                 doc, score = results[0]
                 if score <= self.similarity_threshold:
-                    print(f"⚡ Semantic Cache Hit! (Score: {score:.4f})")
+                    print(f"Semantic Cache Hit! (Score: {score:.4f})")
                     return json.loads(doc.metadata["response_data"])
             return None
         except Exception as e:
