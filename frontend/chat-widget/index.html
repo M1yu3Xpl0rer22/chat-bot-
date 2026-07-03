@@ -965,6 +965,41 @@
         }
 
         // ============================================================
+        // FEEDBACK (RLHF)
+        // ============================================================
+        async function submitFeedback(btn, type) {
+            const botMsgEl = btn.closest('.msg-content').querySelector('.msg-bubble');
+            const botResponse = botMsgEl ? botMsgEl.textContent : '';
+            const userMessage = btn.getAttribute('data-user-msg') || '';
+            
+            // Visual feedback
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 200);
+            
+            // Disable buttons to prevent multiple clicks
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.feedback-btn').forEach(b => {
+                b.style.opacity = '0.5';
+                b.onclick = null;
+            });
+
+            try {
+                await fetch(`${API_BASE}/chat/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        user_message: userMessage,
+                        bot_response: botResponse,
+                        feedback_type: type
+                    })
+                });
+            } catch(e) {
+                console.error("Feedback error", e);
+            }
+        }
+
+        // ============================================================
         // VOICE INPUT (STT)
         // ============================================================
         let recognition = null;
