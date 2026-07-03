@@ -7,11 +7,18 @@ pydantic>=2.0
 # LLM Engine
 ollama>=0.4.0
 
+# Cloud LLM fallback (used automatically if Ollama isn't running)
+groq>=0.11.0
+python-dotenv>=1.0.0
+
 # Translation
 deep-translator>=1.11.0
 
 # Language Detection
 fasttext-wheel>=0.9.2
+# fasttext's predict() is broken on NumPy 2.x (ValueError: "Unable to avoid
+# copy while creating an array"). Pin numpy<2 until fasttext fixes this upstream.
+numpy<2
 
 # Voice
 SpeechRecognition>=3.10.0

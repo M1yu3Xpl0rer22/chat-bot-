@@ -10,6 +10,11 @@ from datetime import datetime
 from services.nlp_service.pipeline.ollama_client import OllamaClient
 from services.nlp_service.translator import TranslationService
 
+try:
+    from services.nlp_service.rag_service import RAGService, RAG_AVAILABLE
+except ImportError:
+    RAG_AVAILABLE = False
+
 # Try to load FastText language detector, fall back to Ollama-based detection
 try:
     from services.nlp_service.pipeline.language_detector import LanguageDetector
@@ -109,6 +114,12 @@ class NLPPipeline:
         self.kb = KnowledgeBase()
         self.translator = TranslationService(self.ollama)
 
+        # RAG Service
+        if RAG_AVAILABLE:
+            self.rag = RAGService(model_name)
+        else:
+            self.rag = None
+
         # FastText for language detection (optional)
         self.lang_detector = None
         if _fasttext_available:
@@ -184,6 +195,12 @@ class NLPPipeline:
             response = quick_result["response"]
             confidence = 0.95
         else:
+            # Step 2.5: RAG Context
+            if session_id and self.rag and self.rag.has_document(session_id):
+                context = self.rag.search(message, session_id)
+                if context:
+                    message = f"Document Context:\n{context}\n\nUser Question:\n{message}"
+
             # Step 3: Use SINGLE Ollama call (classify + respond together)
             history = self._get_session_history(session_id) if session_id else None
             result = self.ollama.classify_and_respond(message, language, history)
@@ -222,7 +239,7 @@ class NLPPipeline:
         FAST pattern matching for common intents — no Ollama call needed.
         Returns instantly for greetings, farewells, thanks, etc.
         """
-        msg_lower = message.strip().lower()
+        msg_lower = message.strip().lower().strip(" !.,?।")
 
         # Greeting patterns
         greetings = {"hello", "hi", "hey", "good morning", "good evening", "good afternoon",
@@ -315,9 +332,19 @@ class NLPPipeline:
         session["language"] = language
         session["last_intent"] = intent
 
-        # Keep only last 10 turns (5 exchanges)
-        if len(session["history"]) > 10:
-            session["history"] = session["history"][-10:]
+        # Smart Context Compression: Summarize if > 8 turns (4 exchanges)
+        if len(session["history"]) > 8:
+            # Get the oldest 6 turns to summarize
+            turns_to_summarize = session["history"][:6]
+            recent_turns = session["history"][6:]
+            
+            # Summarize the oldest turns using Ollama
+            summary = self.ollama.summarize_context(turns_to_summarize)
+            
+            # Rebuild history with the summary + recent turns
+            session["history"] = [
+                {"role": "system", "text": f"Summary of previous context: {summary}"}
+            ] + recent_turns
 
     def get_session_info(self, session_id: str) -> dict | None:
         """Get session information."""
