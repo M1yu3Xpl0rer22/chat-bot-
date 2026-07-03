@@ -113,11 +113,55 @@
             background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
+            transition: background 0.3s;
         }
+        .status-dot.waking { background: #f59e0b; }
+        .status-dot.offline { background: #ef4444; animation: none; }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
+        }
+
+        /* Wake-up overlay for Render cold starts */
+        .wakeup-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            gap: 16px;
+            transition: opacity 0.5s;
+        }
+        .wakeup-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .wakeup-spinner {
+            width: 48px; height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .wakeup-overlay h3 {
+            margin: 0; color: var(--text-primary);
+            font-size: 1.1rem; font-weight: 600;
+        }
+        .wakeup-overlay p {
+            margin: 0; color: var(--text-secondary);
+            font-size: 0.85rem; text-align: center;
+            max-width: 280px; line-height: 1.4;
+        }
+        .wakeup-overlay .wakeup-time {
+            font-size: 0.75rem; color: var(--text-secondary);
+            opacity: 0.7;
         }
 
         .header-right {
@@ -589,6 +633,14 @@
         </button>
     </div>
 
+    <!-- WAKE-UP OVERLAY (shown while Render server is cold-starting) -->
+    <div class="wakeup-overlay" id="wakeupOverlay">
+        <div class="wakeup-spinner"></div>
+        <h3>🚀 Starting BhashaMitra AI...</h3>
+        <p id="wakeupMsg">Connecting to the server. This may take up to 30 seconds on first visit.</p>
+        <span class="wakeup-time" id="wakeupTimer"></span>
+    </div>
+
     <script>
         // ============================================================
         // THEME TOGGLE (light / dark)
@@ -628,7 +680,7 @@
         //   const BACKEND_URL = 'https://your-app.onrender.com';
         // Leave it empty if both are served from the same origin (e.g.
         // FastAPI serving this file directly via app.py).
-        const BACKEND_URL = '';
+        const BACKEND_URL = 'https://multilingual-chatbot-api.onrender.com';
 
         // ============================================================
         // STATE
@@ -648,20 +700,64 @@
         const statusText = document.getElementById('statusText');
 
         // ============================================================
-        // BACKEND STATUS
+        // BACKEND STATUS + COLD-START WAKE-UP
         // ============================================================
+        const wakeupOverlay = document.getElementById('wakeupOverlay');
+        const wakeupMsg = document.getElementById('wakeupMsg');
+        const wakeupTimer = document.getElementById('wakeupTimer');
+        const statusDot = document.querySelector('.status-dot');
+        let serverReady = false;
+
         async function refreshBackendStatus() {
             try {
                 const res = await fetch(`${API_BASE}/health`);
                 const data = await res.json();
                 if (data.llm_backend === 'ollama' || data.llm_backend === 'groq') {
                     statusText.textContent = 'Online • Powered by BhashaMitra AI';
+                    statusDot.className = 'status-dot';
+                    serverReady = true;
                 } else {
                     statusText.textContent = '⚠️ Model not available';
+                    statusDot.className = 'status-dot offline';
                 }
             } catch (e) {
-                statusText.textContent = '⚠️ Cannot reach server';
+                statusText.textContent = '⚠️ Server is waking up...';
+                statusDot.className = 'status-dot waking';
+                serverReady = false;
             }
+        }
+
+        async function waitForServer() {
+            const startTime = Date.now();
+            messageInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Update timer every second
+            const timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                wakeupTimer.textContent = `${elapsed}s elapsed`;
+                if (elapsed > 5) {
+                    wakeupMsg.textContent = 'Server is waking up from sleep mode. Almost there...';
+                }
+                if (elapsed > 15) {
+                    wakeupMsg.textContent = 'Still loading... Free servers take a moment to start. Please wait.';
+                }
+            }, 1000);
+
+            // Retry health check every 3 seconds
+            while (!serverReady) {
+                await refreshBackendStatus();
+                if (serverReady) break;
+                await new Promise(r => setTimeout(r, 3000));
+            }
+
+            clearInterval(timerInterval);
+            // Server is ready — hide overlay with fade
+            wakeupOverlay.classList.add('hidden');
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+            setTimeout(() => wakeupOverlay.remove(), 600);
         }
 
         // ============================================================
@@ -1153,10 +1249,11 @@
         // ============================================================
         // INIT
         // ============================================================
-        initSession();
         initVoiceInput();
-        refreshBackendStatus();
-        messageInput.focus();
+        // Start server wake-up check (handles Render cold starts)
+        waitForServer().then(() => {
+            initSession();
+        });
     </script>
 </body>
 </html>
