@@ -60,7 +60,7 @@ Follow these steps carefully to run the chatbot on your local laptop.
 ### Step 1: Open the Project Directory
 Launch your preferred shell (PowerShell or Command Prompt on Windows, Terminal on macOS/Linux) and navigate to the project directory:
 ```bash
-cd "e:/MAAM/chatbot code"
+cd "project folder"
 ```
 
 ### Step 2: Configure the Python Virtual Environment
